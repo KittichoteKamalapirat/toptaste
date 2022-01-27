@@ -1,22 +1,41 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
+import { useApolloClient } from "@apollo/client";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import FaceIcon from "@mui/icons-material/Face";
+import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
+import { Button, Badge } from "@mui/material";
+import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
+import Box from "@mui/material/Box";
 import { deepOrange } from "@mui/material/colors";
+import Container from "@mui/material/Container";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
+import { theme } from "../../theme";
+import Loading from "../Loading";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = () => {
+  const { data: meData, loading } = useMeQuery();
+  const [logout, { loading: logoutLoading }] = useLogoutMutation();
+  const apolloClient = useApolloClient();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+    await apolloClient.resetStore();
+  };
+
+  //material
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -39,20 +58,147 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
 
+  if (loading) {
+    return <Loading />;
+  }
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      style={{ backgroundColor: theme.palette.primary.main }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
+            sx={{ mr: 2, flexGrow: 1 }}
           >
-            LOGO
+            <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+              LOGO
+            </Link>
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          {/* large */}
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            {meData?.me ? (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
+                {meData.me.isAdmin && (
+                  <>
+                    <Button
+                      startIcon={<AddBoxIcon style={{ color: "white" }} />}
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => navigate("/restaurant/create")}
+                    >
+                      <Typography
+                        variant="body1"
+                        noWrap
+                        component="div"
+                        sx={{
+                          flexGrow: 1,
+                          alignSelf: "flex-end",
+                          color: "white",
+                        }}
+                      >
+                        Add
+                      </Typography>
+                    </Button>
+
+                    <Button
+                      startIcon={<DashboardIcon style={{ color: "white" }} />}
+                      variant="outlined"
+                      color="inherit"
+                      onClick={() => navigate("/admin")}
+                    >
+                      <Typography
+                        variant="body1"
+                        noWrap
+                        component="div"
+                        sx={{
+                          flexGrow: 1,
+                          alignSelf: "flex-end",
+                          color: "white",
+                        }}
+                      >
+                        Dashboard
+                      </Typography>
+                    </Button>
+                  </>
+                )}
+
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  {meData.me.isAdmin ? (
+                    <Badge badgeContent="Admin" color="secondary">
+                      <Avatar
+                        alt={meData?.me?.username}
+                        src="/static/images/avatar/2.jpg"
+                        sx={{ bgcolor: deepOrange[500] }}
+                      />
+                    </Badge>
+                  ) : (
+                    <Avatar
+                      alt={meData?.me?.username}
+                      src="/static/images/avatar/2.jpg"
+                      sx={{ bgcolor: deepOrange[500] }}
+                    />
+                  )}
+
+                  {/* <Typography color="white">
+                    {" "}
+                    Welcome, {meData?.me?.username}{" "}
+                  </Typography> */}
+                </Box>
+
+                <Button onClick={handleLogout} variant="text" color="inherit">
+                  <Typography
+                    variant="body1"
+                    noWrap
+                    component="div"
+                    sx={{ flexGrow: 1, alignSelf: "flex-end" }}
+                  >
+                    Logout
+                  </Typography>
+                </Button>
+              </Box>
+            ) : (
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Link to="/register" style={{ textDecoration: "none" }}>
+                  <Typography
+                    variant="body1"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      alignSelf: "flex-end",
+                      color: "white",
+                    }}
+                  >
+                    Sign up
+                  </Typography>
+                </Link>
+
+                <Link to="/login" style={{ textDecoration: "none" }}>
+                  <Typography
+                    variant="body1"
+                    noWrap
+                    component="div"
+                    sx={{
+                      flexGrow: 1,
+                      alignSelf: "flex-end",
+
+                      color: "white",
+                    }}
+                  >
+                    Login
+                  </Typography>
+                </Link>
+              </Box>
+            )}
+          </Box>
+
+          {/* small */}
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               //   size="large"
               aria-label="account of current user"
@@ -81,64 +227,61 @@ const Navbar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
-          >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
+              {meData?.me ? (
+                <Box>
+                  <MenuItem onClick={handleLogout}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      {" "}
+                      <LogoutIcon />
+                      <Typography>Logout</Typography>
+                    </Box>
+                  </MenuItem>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/2.jpg"
-                  sx={{ bgcolor: deepOrange[500] }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+                  {/* <MenuItem>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <FaceIcon />
+                      <Typography> My Profile</Typography>
+                    </Box>
+                  </MenuItem> */}
+
+                  <MenuItem onClick={() => navigate("/restaurant/create")}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <AddBoxIcon />
+                      <Typography> Add restaurant</Typography>
+                    </Box>
+                  </MenuItem>
+
+                  {meData.me.isAdmin && (
+                    <MenuItem onClick={() => navigate("/admin")}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <AddBoxIcon />
+                        <Typography> Go to dashboard</Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* <MenuItem>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Typography> Welcome, {meData?.me?.username}</Typography>
+                    </Box>
+                  </MenuItem> */}
+                </Box>
+              ) : (
+                <Box>
+                  <MenuItem>
+                    <Link to="register" style={{ textDecoration: "none" }}>
+                      <Typography>Sign up</Typography>
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link to="/login" style={{ textDecoration: "none" }}>
+                      <Typography>Login</Typography>
+                    </Link>
+                  </MenuItem>
+                </Box>
+              )}
             </Menu>
           </Box>
         </Toolbar>

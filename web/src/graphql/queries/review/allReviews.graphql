@@ -1,0 +1,10 @@
+query AllReviews {
+  allReviews {
+    id
+    comment
+    score
+    visitedDate
+    userId
+    postId
+  }
+}

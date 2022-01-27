@@ -1,0 +1,11 @@
+query Reviews($postId: Int!) {
+  reviews(postId: $postId) {
+    id
+    score
+    visitedDate
+    user {
+      id
+      username
+    }
+  }
+}

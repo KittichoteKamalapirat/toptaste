@@ -10,7 +10,6 @@ import {
   OneToMany,
 } from "typeorm";
 import { Review } from "./Review";
-import { Upvote } from "./Upvote";
 import { User } from "./User";
 
 @ObjectType()
@@ -28,13 +27,6 @@ export class Post extends BaseEntity {
   @Field()
   text: string;
 
-  // @Column({ type: "int", default: 0 })
-  // @Field()
-  // points: number;
-
-  // @Field(() => Int, { nullable: true })
-  // voteStatus: number | null; //willl be 1 or -1, this is used to check the status of this post for a user
-
   @Column({ nullable: true })
   @Field({ nullable: true })
   url: string;
@@ -48,7 +40,7 @@ export class Post extends BaseEntity {
   @ManyToOne((type) => User, (user) => user.posts)
   creator: User;
 
-  @OneToMany((type) => Review, (review) => review.post)
+  @OneToMany((type) => Review, (review) => review.post, { cascade: true })
   reviews: Review[];
 
   @Column({ type: "int", default: 0 })
@@ -58,9 +50,6 @@ export class Post extends BaseEntity {
   @Column({ type: "int", default: 0 })
   @Field(() => Int)
   reviewsCounter: number;
-
-  // @OneToMany((type) => Upvote, (upvote) => upvote.post)
-  // upvotes: Upvote[];
 
   @Field(() => String)
   @CreateDateColumn()

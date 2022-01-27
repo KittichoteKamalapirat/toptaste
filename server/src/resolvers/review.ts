@@ -90,12 +90,26 @@ export class ReviewResolver {
   //get all reviews in the database
   @UseMiddleware(isAuth)
   @Query(() => [Review])
-  async allReviews() {
+  async allReviews(): Promise<Review[] | Error> {
     try {
       return Review.find();
     } catch (error) {
       console.log(error);
-      return new Error("Cannot get reviews for this post");
+      return new Error("Cannot get all the reviews ");
+    }
+  }
+
+  //get one review
+  @UseMiddleware(isAuth)
+  @Query(() => Review)
+  async review(
+    @Arg("id", () => Int) id: number
+  ): Promise<Review | Error | undefined> {
+    try {
+      return Review.findOne(id);
+    } catch (error) {
+      console.log(error);
+      return new Error("Cannot get the review for this post");
     }
   }
 
@@ -131,8 +145,9 @@ export class ReviewResolver {
         return new Error("Invalid score input");
       }
 
+      //need to add userId: req.session.userId and and change to isAuth middle where if the owner can edit
       const currentReview = await Review.findOne({
-        where: { id: id, userId: req.session.userId },
+        where: { id: id },
       });
 
       if (!currentReview) {
@@ -218,7 +233,7 @@ export class ReviewResolver {
         `
             select r.*
             from review r
-            order by r."visitedDate" DESC
+            order by r."createdAt" DESC
             limit 1
             `
       );

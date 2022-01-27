@@ -1,0 +1,7 @@
+query WorstReview($postId: Int!) {
+  worstReview(postId: $postId) {
+    score
+    comment
+    visitedDate
+  }
+}

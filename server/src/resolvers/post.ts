@@ -27,7 +27,7 @@ class PostInput {
   @Field()
   text: string;
   @Field()
-  url: string;
+  url?: string;
 }
 
 @ObjectType()

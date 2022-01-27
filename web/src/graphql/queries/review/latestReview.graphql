@@ -1,0 +1,7 @@
+query LatestReview($postId: Int!) {
+  latestReview(postId: $postId) {
+    score
+    comment
+    visitedDate
+  }
+}

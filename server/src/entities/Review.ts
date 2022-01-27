@@ -39,7 +39,9 @@ export class Review extends BaseEntity {
 
   // relationship with Post (Restaurant)
 
-  @ManyToOne(() => Post, (post) => post.reviews)
+  @ManyToOne(() => Post, (post) => post.reviews, {
+    onDelete: "CASCADE",
+  })
   @Field(() => Post)
   post: Post;
 

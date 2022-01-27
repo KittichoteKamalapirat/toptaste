@@ -1,12 +1,14 @@
 fragment PostSnippet on Post {
   id
   title
+  text
   textSnippet
-  videoUrl
+  url
   createdAt
   updatedAt
-  points
-  voteStatus
+  reviewsSum
+  reviewsCounter
+  reviewAvg
   creator {
     id
     username

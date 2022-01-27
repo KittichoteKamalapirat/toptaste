@@ -10,7 +10,6 @@ import {
 } from "typeorm";
 import { Post } from "./Post";
 import { Review } from "./Review";
-import { Upvote } from "./Upvote";
 
 @ObjectType()
 @Entity()
@@ -21,7 +20,7 @@ export class User extends BaseEntity {
 
   @Column({ unique: true })
   @Field()
-  username!: string;
+  username: string;
 
   @Column({ unique: true })
   @Field()
@@ -40,9 +39,6 @@ export class User extends BaseEntity {
 
   @OneToMany((type) => Review, (review) => review.user)
   reviews: Review[];
-
-  // @OneToMany((type) => Upvote, (upvote) => upvote.user)
-  // upvotes: Upvote[];
 
   @CreateDateColumn()
   @Field()

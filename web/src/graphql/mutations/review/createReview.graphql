@@ -1,0 +1,8 @@
+mutation CreateReview($postId: Int!, $input: ReviewInput!) {
+  createReview(postId: $postId, input: $input) {
+    id
+    comment
+    score
+    visitedDate
+  }
+}

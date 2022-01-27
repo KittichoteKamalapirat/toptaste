@@ -16,12 +16,9 @@ import { COOKIE_NAME, __prod__ } from "./constants";
 import cors from "cors";
 import { sendEmail } from "./utils/sendEmail";
 import path from "path";
-import { Upvote } from "./entities/Upvote";
 import { createUserLoader } from "./utils/createUserLoader";
-import { upvoteLoader } from "./utils/createUpvoteLoader";
 import { Review } from "./entities/Review";
 import { ReviewResolver } from "./resolvers/review";
-// import { createUpvoteLoader } from "./utils/createUpvoteLoader";
 
 const main = async () => {
   const conn = await createConnection({
@@ -34,15 +31,12 @@ const main = async () => {
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [User, Post, Upvote, Review],
+    entities: [User, Post, Review],
   });
 
   // await conn.runMigrations();
   // console.log("delete all the data");
-  // await Post.delete({})
-  // await conn.runMigrations(); -> make sure the colume name with capital letter is "", put quatation "creatorId"
-  // console.log("dirname", __dirname);
-  // sendEmail("bob@bob.com", "<h1>Email</h1>");
+  // await Post.delete({});
   const app = express();
 
   const RedisStore = connectRedis(session);
@@ -87,7 +81,6 @@ const main = async () => {
       res,
       redis,
       userLoader: createUserLoader(),
-      upvoteLoader: upvoteLoader(),
     }),
   });
 

@@ -41,15 +41,15 @@ class UserResponse {
 
 @Resolver(User)
 export class UserResolver {
-  @FieldResolver(() => String)
-  email(@Root() user: User, @Ctx() { req }: MyContext) {
-    if (user.id === req.session.userId) {
-      // This is the current user and its ok to show them their own emails
-      return user.email;
-    }
-    // current user watns to see someone elses email
-    return "";
-  }
+  // @FieldResolver(() => String)
+  // email(@Root() user: User, @Ctx() { req }: MyContext) {
+  //   if (user.id === req.session.userId) {
+  //     // This is the current user and its ok to show them their own emails
+  //     return user.email;
+  //   }
+  //   // current user watns to see someone elses email
+  //   return "";
+  // }
   @Mutation(() => UserResponse)
   async changePassword(
     @Arg("newPassword") newPassword: string,
@@ -135,10 +135,13 @@ export class UserResolver {
     return true;
   }
 
-  //get all users
+  //get all user
+
+  @UseMiddleware(isAdmin)
   @Query(() => [User])
   async users(): Promise<User[] | undefined> {
-    return User.find();
+    const users = await User.find();
+    return users;
   }
 
   // get a single user
@@ -198,6 +201,45 @@ export class UserResolver {
     // automatically logged in after register
     // set a cookie on the user
     req.session.userId = user.id;
+    return { user: user };
+  }
+  //admin can create a user
+  @UseMiddleware(isAdmin)
+  @Mutation(() => UserResponse)
+  async createUser(
+    @Arg("data") data: UsernamePasswordInput
+  ): Promise<UserResponse> {
+    const errors = validateRegister(data);
+    if (errors) {
+      return { errors };
+    }
+    const hash = await argon2.hash(data.password);
+    let user;
+    try {
+      const result = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values([
+          { username: data.username, email: data.email, password: hash },
+        ])
+        .returning("*")
+        .execute();
+
+      user = result.raw[0];
+    } catch (error) {
+      if (error.code === "23505") {
+        return {
+          errors: [
+            {
+              field: "username",
+              message: "username already taken",
+            },
+          ],
+        };
+      }
+    }
+
     return { user: user };
   }
 
