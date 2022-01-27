@@ -14,17 +14,19 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
 import { theme } from "../../theme";
 import Loading from "../Loading";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import { CurrentUserContext, UserContext } from "../../util/UserContext";
 
 const pages = ["Products", "Pricing", "Blog"];
 
 const Navbar = () => {
-  const { data: meData, loading } = useMeQuery();
+  const { currentUser } = useContext(UserContext);
+
   const [logout, { loading: logoutLoading }] = useLogoutMutation();
   const apolloClient = useApolloClient();
   const navigate = useNavigate();
@@ -58,9 +60,6 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
 
-  if (loading) {
-    return <Loading />;
-  }
   return (
     <AppBar
       position="static"
@@ -81,9 +80,9 @@ const Navbar = () => {
 
           {/* large */}
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {meData?.me ? (
+            {currentUser ? (
               <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
-                {meData.me.isAdmin && (
+                {currentUser.isAdmin && (
                   <>
                     <Button
                       startIcon={<AddBoxIcon style={{ color: "white" }} />}
@@ -128,17 +127,17 @@ const Navbar = () => {
                 )}
 
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  {meData.me.isAdmin ? (
+                  {currentUser.isAdmin ? (
                     <Badge badgeContent="Admin" color="secondary">
                       <Avatar
-                        alt={meData?.me?.username}
+                        alt={currentUser.username}
                         src="/static/images/avatar/2.jpg"
                         sx={{ bgcolor: deepOrange[500] }}
                       />
                     </Badge>
                   ) : (
                     <Avatar
-                      alt={meData?.me?.username}
+                      alt={currentUser.username}
                       src="/static/images/avatar/2.jpg"
                       sx={{ bgcolor: deepOrange[500] }}
                     />
@@ -227,7 +226,7 @@ const Navbar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {meData?.me ? (
+              {currentUser ? (
                 <Box>
                   <MenuItem onClick={handleLogout}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -251,7 +250,7 @@ const Navbar = () => {
                     </Box>
                   </MenuItem>
 
-                  {meData.me.isAdmin && (
+                  {currentUser.isAdmin && (
                     <MenuItem onClick={() => navigate("/admin")}>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}

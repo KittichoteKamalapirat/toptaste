@@ -41,7 +41,6 @@ export const PostCard: React.FC<PostCardProps> = ({
         gap: 2,
         cursor: pointer ? "pointer" : null,
       }}
-      key={post.id}
       onClick={() => navigate(`/restaurant/${post.id}`)}
     >
       <Box sx={{ flexBasis: "30%" }}>

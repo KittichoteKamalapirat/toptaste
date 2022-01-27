@@ -32,10 +32,12 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
 
         <Rating name="read-only" value={4.8} readOnly size="large" />
 
-        {comment && <Typography variant="body2">{comment}</Typography>}
+        {comment && <Typography variant="body1">{comment}</Typography>}
 
         {visitedDate && (
-          <Typography variant="subtitle1">Visited on {formatted}</Typography>
+          <Typography variant="subtitle2" color="GrayText">
+            Visited on {formatted}
+          </Typography>
         )}
       </CardContent>
     </Card>

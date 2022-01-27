@@ -1,16 +1,25 @@
 import { Box, Typography, Button } from "@mui/material";
 import { Field, Form, Formik } from "formik";
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { InputField } from "../components/InputField";
 import { XYCenter } from "../components/layouts/XYCenter";
 import { MeDocument, MeQuery, useRegisterMutation } from "../generated/graphql";
 import { toErrorMap } from "../util/toErrorMap";
+import { UserContext } from "../util/UserContext";
 
 interface registerProps {}
 
 export const Register: React.FC<registerProps> = ({}) => {
   const navigate = useNavigate();
+
   const [register] = useRegisterMutation();
+
+  const { currentUser } = useContext(UserContext);
+
+  if (currentUser) {
+    navigate("/");
+  }
 
   return (
     <XYCenter>

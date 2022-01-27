@@ -4,10 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { InputField } from "../components/InputField";
 import { XYCenter } from "../components/layouts/XYCenter";
 import {
+  CreateUserMutation,
   MeDocument,
   MeQuery,
   useCreateUserMutation,
+  UserDocument,
   useRegisterMutation,
+  UsersDocument,
 } from "../generated/graphql";
 import { toErrorMap } from "../util/toErrorMap";
 
@@ -38,19 +41,13 @@ export const CreateUser: React.FC<createUserProps> = ({}) => {
                 data: { ...values },
               },
               update: (cache, { data }) => {
-                cache.writeQuery<MeQuery>({
-                  query: MeDocument,
-                  data: {
-                    __typename: "Query",
-                    me: data?.createUser.user,
-                  },
-                });
+                cache.evict({ fieldName: "users" });
               },
             });
             if (response.data?.createUser.errors) {
               setErrors(toErrorMap(response.data.createUser.errors));
             } else if (response.data?.createUser.user) {
-              navigate("/");
+              navigate("/admin");
             }
           }}
         >

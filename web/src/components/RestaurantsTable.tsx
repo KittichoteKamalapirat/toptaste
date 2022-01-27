@@ -1,7 +1,7 @@
 import EditIcon from "@mui/icons-material/Edit";
-import { Avatar, Box, Button, Typography } from "@mui/material";
+import { Avatar, Box, Button, Pagination, Typography } from "@mui/material";
 import { deepOrange } from "@mui/material/colors";
-import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid, GridRenderCellParams, GridFooter } from "@mui/x-data-grid";
 import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDeletePostMutation, usePostsQuery } from "../generated/graphql";
@@ -103,7 +103,7 @@ export const RestaurantsTable = () => {
       <DataGrid
         rows={rows!}
         columns={columns}
-        pageSize={5}
+        pageSize={10}
         rowsPerPageOptions={[10]}
         components={{
           Footer: CustomFooterStatusComponent,
@@ -120,7 +120,9 @@ export function CustomFooterStatusComponent(props: {
 }) {
   const navigate = useNavigate();
   return (
-    <Box sx={{ padding: "10px", display: "flex" }}>
+    <Box
+      sx={{ margin: "10px", display: "flex", justifyContent: "space-between" }}
+    >
       <Button
         startIcon={<AddBoxIcon style={{ color: "white" }} />}
         variant="contained"
@@ -133,13 +135,13 @@ export function CustomFooterStatusComponent(props: {
           component="div"
           sx={{
             flexGrow: 1,
-            alignSelf: "flex-end",
             color: "white",
           }}
         >
           Add new restaurant
         </Typography>
       </Button>
+      <GridFooter />
     </Box>
   );
 }

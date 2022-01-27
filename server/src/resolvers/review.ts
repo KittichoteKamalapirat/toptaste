@@ -233,6 +233,7 @@ export class ReviewResolver {
         `
             select r.*
             from review r
+            where r."postId" = ${postId}
             order by r."createdAt" DESC
             limit 1
             `
@@ -254,6 +255,7 @@ export class ReviewResolver {
         `
             select r.*
             from review r
+            where r."postId" = ${postId}
             order by r."score" DESC
             limit 1
             `
@@ -275,6 +277,7 @@ export class ReviewResolver {
         `
             select r.*
             from review r
+            where r."postId" = ${postId}
             order by r."score" ASC
             limit 1
             `

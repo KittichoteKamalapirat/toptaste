@@ -20,7 +20,9 @@ export const Home: React.FC<HomeProps> = ({}) => {
   return (
     <XContainer>
       {data?.posts.posts.map((post) => (
-        <PostCard post={post as Post} pointer={true} />
+        <Box key={post.id}>
+          <PostCard post={post as Post} pointer={true} />
+        </Box>
       ))}
 
       {data && data.posts.hasMore ? (

@@ -204,6 +204,7 @@ export class UserResolver {
     return { user: user };
   }
   //admin can create a user
+  //no need to login after create
   @UseMiddleware(isAdmin)
   @Mutation(() => UserResponse)
   async createUser(

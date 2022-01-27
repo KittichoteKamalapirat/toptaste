@@ -85,7 +85,7 @@ export const ReviewsTable = () => {
   return (
     <div style={{ height: 400, width: "100%" }}>
       <Typography variant="h6" component="h2">
-        Reviewtable
+        Review
       </Typography>
       <DataGrid
         rows={rows!}

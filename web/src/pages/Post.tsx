@@ -6,7 +6,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { XCenter } from "../components/layouts/XCenter";
 import { XContainer } from "../components/layouts/XContainer";
@@ -18,19 +18,19 @@ import {
   useBestReviewQuery,
   useDeletePostMutation,
   useLatestReviewQuery,
-  useMeQuery,
   usePostQuery,
   useWorstReviewQuery,
 } from "../generated/graphql";
 import { EditCard } from "../components/EditCard";
 import { DeleteCard } from "../components/DeleteCard";
+import { UserContext } from "../util/UserContext";
 
 interface PostProps {}
 
 export const Post: React.FC<PostProps> = ({}) => {
   const params = useParams();
   const navigate = useNavigate();
-  const { data: meData } = useMeQuery();
+  const { currentUser } = useContext(UserContext);
 
   const [deletePost] = useDeletePostMutation();
   const {
@@ -79,6 +79,15 @@ export const Post: React.FC<PostProps> = ({}) => {
   return (
     <XContainer>
       <Box>
+        <Button
+          variant="outlined"
+          color="inherit"
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          Go back
+        </Button>
         <PostCard post={post?.post as PostType} />
         <Grid container spacing={4}>
           {post?.post?.reviewsSum && post.post.reviewsSum > 0 ? (
@@ -145,7 +154,7 @@ export const Post: React.FC<PostProps> = ({}) => {
         </Button>
       </XCenter>
 
-      {meData?.me?.isAdmin && (
+      {currentUser.isAdmin && (
         <>
           <EditCard
             buttonText="Edit this restaurant"

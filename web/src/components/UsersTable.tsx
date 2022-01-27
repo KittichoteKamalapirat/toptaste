@@ -1,18 +1,12 @@
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import EditIcon from "@mui/icons-material/Edit";
-import { deepOrange } from "@mui/material/colors";
-import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { Box, Button, Typography } from "@mui/material";
+import { DataGrid, GridRenderCellParams, GridFooter } from "@mui/x-data-grid";
 import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  useDeletePostMutation,
-  useDeleteUserMutation,
-  usePostsQuery,
-} from "../generated/graphql";
+import { useDeleteUserMutation, useUsersQuery } from "../generated/graphql";
 import { DeleteButton } from "./DeleteButton";
 import Loading from "./Loading";
-import { useUsersQuery } from "../generated/graphql";
-import { Box, Button, Typography } from "@mui/material";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 
 export const UsersTable = () => {
   const { data: usersData, loading, error } = useUsersQuery();
@@ -96,7 +90,9 @@ export function CustomFooterStatusComponent(props: {
 }) {
   const navigate = useNavigate();
   return (
-    <Box sx={{ padding: "10px", display: "flex" }}>
+    <Box
+      sx={{ margin: "10px", display: "flex", justifyContent: "space-between" }}
+    >
       <Button
         startIcon={<AddBoxIcon style={{ color: "white" }} />}
         variant="contained"
@@ -109,13 +105,13 @@ export function CustomFooterStatusComponent(props: {
           component="div"
           sx={{
             flexGrow: 1,
-            alignSelf: "flex-end",
             color: "white",
           }}
         >
           Add new user
         </Typography>
       </Button>
+      <GridFooter />
     </Box>
   );
 }

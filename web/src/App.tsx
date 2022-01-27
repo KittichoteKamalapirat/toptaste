@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
 
 import { theme } from "./theme";
@@ -16,41 +16,69 @@ import { AdminDashboard } from "./pages/AdminDashboard";
 import { AppContainer } from "./components/layouts/AppContainer";
 import { UpdateUser } from "./pages/UpdateUser";
 import { CreateUser } from "./pages/CreateUser";
+import { CurrentUserContext, UserContext } from "./util/UserContext";
+import { useMeQuery, User } from "./generated/graphql";
+import Loading from "./components/Loading";
+import { AuthRoutes, AdminRoutes } from "./util/ProtectedRoutes";
 
 const App: React.FC = () => {
+  const [currentUser, setCurrentUser] = useState<User | null>();
+  const { data, loading } = useMeQuery();
+
+  const value = useMemo(
+    () => ({ currentUser, setCurrentUser }),
+    [currentUser, setCurrentUser]
+  );
+  useEffect(() => {
+    setCurrentUser(data?.me as User);
+  }, [data]);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <Navbar />
-        <AppContainer>
-          <Routes>
-            <Route path="/" element={<Home />} />
+        <UserContext.Provider value={value as CurrentUserContext | null}>
+          <Navbar />
+          <AppContainer>
+            <Routes>
+              {/* Anyone routes */}
+              <Route path="/" element={<Home />} />
+              {/* post */}
+              <Route path="/restaurant/:id" element={<Post />} />
+              {/* user */}
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              {/* regular user can  create a review */}
+              {/* regular user protected routes */}
+              <Route element={<AuthRoutes />}>
+                <Route
+                  path="/restaurant/:id/review/create"
+                  element={<CreateReview />}
+                />
+              </Route>
+              {/* admin protected routes */}
+              <Route element={<AdminRoutes />}>
+                <Route path="/admin" element={<AdminDashboard />} />
 
-            <Route path="/admin" element={<AdminDashboard />} />
+                {/* user */}
+                <Route path="/user/create" element={<CreateUser />} />
+                <Route path="/user/:id/update" element={<UpdateUser />} />
 
-            {/* user */}
-            <Route path="/register" element={<Register />} />
-            <Route path="/user/create" element={<CreateUser />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/user/:id/update" element={<UpdateUser />} />
+                {/* post */}
+                <Route path="/restaurant/create" element={<CreatePost />} />
 
-            {/* post */}
-            <Route path="/restaurant/create" element={<CreatePost />} />
-            <Route path="/restaurant/:id" element={<Post />} />
-            <Route path="/restaurant/:id/update" element={<UpdatePost />} />
+                <Route path="/restaurant/:id/update" element={<UpdatePost />} />
 
-            {/* review */}
-            <Route
-              path="/restaurant/:id/review/create"
-              element={<CreateReview />}
-            />
-            <Route
-              path="/restaurant/:postId/review/:reviewId/update"
-              element={<UpdateReview />}
-            />
-          </Routes>
-        </AppContainer>
+                {/* review */}
+                <Route
+                  path="/restaurant/:postId/review/:reviewId/update"
+                  element={<UpdateReview />}
+                />
+              </Route>
+              <Route path="*" element={<Navigate to="/" />}></Route>
+            </Routes>
+          </AppContainer>
+        </UserContext.Provider>
       </BrowserRouter>
     </ThemeProvider>
   );
