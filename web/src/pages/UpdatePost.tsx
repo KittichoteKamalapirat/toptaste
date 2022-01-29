@@ -1,10 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
-
-import { Formik, Form, Field } from "formik";
-import { ValuesOfCorrectTypeRule } from "graphql";
+import { Field, Form, Formik } from "formik";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 import { InputField } from "../components/InputField";
 import { XCenter } from "../components/layouts/XCenter";
 import { XYCenter } from "../components/layouts/XYCenter";

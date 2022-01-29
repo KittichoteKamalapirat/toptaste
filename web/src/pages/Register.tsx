@@ -1,6 +1,6 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { Field, Form, Formik } from "formik";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { InputField } from "../components/InputField";
 import { XYCenter } from "../components/layouts/XYCenter";
@@ -17,9 +17,11 @@ export const Register: React.FC<registerProps> = ({}) => {
 
   const { currentUser } = useContext(UserContext);
 
-  if (currentUser) {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/");
+    }
+  });
 
   return (
     <XYCenter>

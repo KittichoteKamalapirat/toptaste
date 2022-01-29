@@ -1,9 +1,9 @@
 import { useApolloClient } from "@apollo/client";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import FaceIcon from "@mui/icons-material/Face";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Button, Badge } from "@mui/material";
+import { Badge, Button } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -16,25 +16,27 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
+import { useLogoutMutation } from "../../generated/graphql";
 import { theme } from "../../theme";
-import Loading from "../Loading";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import { CurrentUserContext, UserContext } from "../../util/UserContext";
+import { UserContext } from "../../util/UserContext";
 
 const pages = ["Products", "Pricing", "Blog"];
 
 const Navbar = () => {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
 
   const [logout, { loading: logoutLoading }] = useLogoutMutation();
   const apolloClient = useApolloClient();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout();
+    localStorage.setItem("user", "null");
+    setCurrentUser(null); //trigger useEffect
+
+    await logout(); //redis removed -> mequery wouldn't work now
     navigate("/");
     await apolloClient.resetStore();
+    setCurrentUser(null); //again
   };
 
   //material
@@ -149,20 +151,18 @@ const Navbar = () => {
                   </Typography> */}
                 </Box>
 
-                <Button onClick={handleLogout} variant="text" color="inherit">
-                  <Typography
-                    variant="body1"
-                    noWrap
-                    component="div"
-                    sx={{ flexGrow: 1, alignSelf: "flex-end" }}
-                  >
-                    Logout
-                  </Typography>
+                <Button
+                  onClick={handleLogout}
+                  variant="text"
+                  color="inherit"
+                  startIcon={<LogoutIcon />}
+                >
+                  Logout
                 </Button>
               </Box>
             ) : (
               <Box sx={{ display: "flex", gap: 2 }}>
-                <Link to="/register" style={{ textDecoration: "none" }}>
+                <Button onClick={() => navigate("/register")} variant="text">
                   <Typography
                     variant="body1"
                     noWrap
@@ -175,9 +175,9 @@ const Navbar = () => {
                   >
                     Sign up
                   </Typography>
-                </Link>
+                </Button>
 
-                <Link to="/login" style={{ textDecoration: "none" }}>
+                <Button onClick={() => navigate("/login")} variant="text">
                   <Typography
                     variant="body1"
                     noWrap
@@ -191,7 +191,7 @@ const Navbar = () => {
                   >
                     Login
                   </Typography>
-                </Link>
+                </Button>
               </Box>
             )}
           </Box>

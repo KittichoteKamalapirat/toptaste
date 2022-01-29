@@ -1,17 +1,9 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { Field, Form, Formik } from "formik";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { InputField } from "../components/InputField";
 import { XYCenter } from "../components/layouts/XYCenter";
-import {
-  CreateUserMutation,
-  MeDocument,
-  MeQuery,
-  useCreateUserMutation,
-  UserDocument,
-  useRegisterMutation,
-  UsersDocument,
-} from "../generated/graphql";
+import { useCreateUserMutation } from "../generated/graphql";
 import { toErrorMap } from "../util/toErrorMap";
 
 interface createUserProps {}

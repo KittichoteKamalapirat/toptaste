@@ -1,13 +1,17 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import React from "react";
+import { XYCenter } from "./layouts/XYCenter";
 
 interface LoadingProps {}
 
 const Loading: React.FC<LoadingProps> = () => {
   return (
-    <Box sx={{ display: "flex" }}>
-      <CircularProgress />
-    </Box>
+    <XYCenter>
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <CircularProgress />
+        <Typography>Loading...</Typography>
+      </Box>
+    </XYCenter>
   );
 };
 

@@ -29,9 +29,27 @@ const App: React.FC = () => {
     () => ({ currentUser, setCurrentUser }),
     [currentUser, setCurrentUser]
   );
+
   useEffect(() => {
-    setCurrentUser(data?.me as User);
-  }, [data]);
+    const user = localStorage.getItem("user");
+    let userObj = null;
+    if (user) {
+      userObj = JSON.parse(user);
+    }
+
+    setCurrentUser(userObj);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(currentUser));
+    if (data?.me) {
+      setCurrentUser(data?.me as User);
+    }
+  }, [currentUser, data?.me]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <ThemeProvider theme={theme}>

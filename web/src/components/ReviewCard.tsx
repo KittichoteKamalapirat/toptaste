@@ -26,11 +26,16 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
         <Typography variant="h5" component="div">
           {label}
         </Typography>
-        <Typography variant="h2" sx={{ mb: 1.5 }} color="text.secondary">
+        <Typography
+          variant="h2"
+          sx={{ mb: 1.5 }}
+          color="text.secondary"
+          data-test={`${label} Score`}
+        >
           {score.toFixed(1)}
         </Typography>
 
-        <Rating name="read-only" value={4.8} readOnly size="large" />
+        <Rating name="read-only" value={score} readOnly size="large" />
 
         {comment && <Typography variant="body1">{comment}</Typography>}
 

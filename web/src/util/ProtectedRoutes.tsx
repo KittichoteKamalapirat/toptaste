@@ -4,7 +4,7 @@ import { UserContext } from "./UserContext";
 
 export const AuthRoutes = () => {
   const { currentUser } = useContext(UserContext);
-  return currentUser ? <Outlet /> : <Navigate to="/" />;
+  return currentUser ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export const AdminRoutes = () => {

@@ -27,7 +27,9 @@ export class Post extends BaseEntity {
   @Field()
   text: string;
 
-  @Column({ nullable: true })
+  @Column({
+    nullable: true,
+  })
   @Field({ nullable: true })
   url: string;
 
@@ -37,7 +39,9 @@ export class Post extends BaseEntity {
   creatorId: number;
 
   @Field((type) => User)
-  @ManyToOne((type) => User, (user) => user.posts)
+  @ManyToOne((type) => User, (user) => user.posts, {
+    onDelete: "CASCADE",
+  })
   creator: User;
 
   @OneToMany((type) => Review, (review) => review.post, { cascade: true })

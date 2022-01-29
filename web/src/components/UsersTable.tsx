@@ -75,7 +75,7 @@ export const UsersTable = () => {
       <DataGrid
         rows={rows!}
         columns={columns}
-        pageSize={5}
+        pageSize={10}
         rowsPerPageOptions={[10]}
         components={{
           Footer: CustomFooterStatusComponent,

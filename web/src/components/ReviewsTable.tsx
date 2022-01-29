@@ -1,8 +1,8 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { deepOrange } from "@mui/material/colors";
-import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid, GridRenderCellParams, GridFooter } from "@mui/x-data-grid";
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   useDeletePostMutation,
   useDeleteUserMutation,
@@ -11,11 +11,12 @@ import {
 import { DeleteButton } from "./DeleteButton";
 import Loading from "./Loading";
 import { useUsersQuery } from "../generated/graphql";
-import { Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import {
   useAllReviewsQuery,
   useDeleteReviewMutation,
 } from "../generated/graphql";
+import moment from "moment";
 
 export const ReviewsTable = () => {
   const { data: reviewsData, loading, error } = useAllReviewsQuery();
@@ -42,8 +43,10 @@ export const ReviewsTable = () => {
 
   const columns = [
     { field: "id", headerName: "ID", width: 60 },
-    { field: "userId", headerName: "userId", width: 100 },
+    { field: "postId", headerName: "Restaurant ID", width: 120 },
+    { field: "userId", headerName: "User ID", width: 100 },
     { field: "comment", headerName: "comment", width: 200 },
+    { field: "visitedDate", headerName: "Visited Date", width: 200 },
     { field: "score", headerName: "score", width: 100 },
 
     {
@@ -69,10 +72,16 @@ export const ReviewsTable = () => {
   ];
 
   const rows = reviewsData?.allReviews.map((review) => {
+    const unixDate = new Date(parseInt(review.visitedDate))
+      .toISOString()
+      .slice(0, 10);
+    const formatted = moment(unixDate).format("ll");
     return {
       id: review.id,
+      postId: review.postId,
       userId: review.userId,
       comment: review.comment,
+      visitedDate: formatted,
       score: review.score,
       actions: { reviewId: review.id, postId: review.postId },
     };
@@ -90,9 +99,28 @@ export const ReviewsTable = () => {
       <DataGrid
         rows={rows!}
         columns={columns}
-        pageSize={5}
+        pageSize={10}
         rowsPerPageOptions={[10]}
+        components={{
+          Footer: CustomFooterStatusComponent,
+        }}
       />
     </div>
   );
 };
+
+export function CustomFooterStatusComponent(props: {
+  status: "connected" | "disconnected";
+}) {
+  return (
+    <Box
+      sx={{ margin: "10px", display: "flex", justifyContent: "space-between" }}
+    >
+      <Typography variant="body1" component="div">
+        *To add review, please visit a restaurant you want to review
+      </Typography>
+
+      <GridFooter />
+    </Box>
+  );
+}

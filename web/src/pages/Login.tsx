@@ -1,6 +1,6 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { Field, Form, Formik } from "formik";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { InputField } from "../components/InputField";
 import { XYCenter } from "../components/layouts/XYCenter";
@@ -12,12 +12,14 @@ interface loginProps {}
 
 export const Login: React.FC<loginProps> = ({}) => {
   const navigate = useNavigate();
-  const { currentUser, setCurrentUser } = useContext(UserContext);
-  const [login] = useLoginMutation();
+  const { currentUser } = useContext(UserContext);
+  const [login, { data }] = useLoginMutation();
 
-  if (currentUser) {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/");
+    }
+  });
 
   return (
     <XYCenter>
@@ -52,7 +54,7 @@ export const Login: React.FC<loginProps> = ({}) => {
             if (response.data?.login.errors) {
               setErrors(toErrorMap(response.data.login.errors));
             } else if (response.data?.login.user) {
-              setCurrentUser(response.data.login.user);
+              // setCurrentUser(response.data.login.user);
               navigate("/");
             }
           }}
@@ -79,8 +81,13 @@ export const Login: React.FC<loginProps> = ({}) => {
                 Don't have account? <Link to="/register">Sign up</Link>
               </Box>
 
-              <Button type="submit" variant="contained" color="primary">
-                login
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
+                sign in
               </Button>
             </Form>
           )}

@@ -15,7 +15,6 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.4.0",
     "@types/node": "^16.11.21",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
@@ -58,6 +57,9 @@
     "@graphql-codegen/cli": "2.4.0",
     "@graphql-codegen/typescript": "2.4.2",
     "@graphql-codegen/typescript-operations": "^2.2.2",
-    "@graphql-codegen/typescript-react-apollo": "3.2.4"
+    "@graphql-codegen/typescript-react-apollo": "3.2.4",
+    "@testing-library/cypress": "^8.0.2",
+    "@testing-library/dom": "^8.11.3",
+    "cypress": "^9.3.1"
   }
 }

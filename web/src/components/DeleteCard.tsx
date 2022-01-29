@@ -1,24 +1,35 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
+import { Box, Card, CardContent, Theme, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { DeleteButton } from "./DeleteButton";
-
 interface DeleteCardProps {
   buttonText: string;
   handleDelete: () => void;
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  responsiveFlex: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: "20px",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+    [theme.breakpoints.up("sm")]: {
+      flexDirection: "row",
+      marginY: "20px",
+    },
+  },
+  button: {
+    [theme.breakpoints.down("sm")]: {
+      marginBottom: "20px",
+    },
+    [theme.breakpoints.up("sm")]: {
+      margin: "20px",
+    },
+  },
+}));
 
 export const DeleteCard: React.FC<DeleteCardProps> = ({
   buttonText,
@@ -34,17 +45,10 @@ export const DeleteCard: React.FC<DeleteCardProps> = ({
     setOpen(false);
   };
 
-  const navigate = useNavigate();
+  const classes = useStyles();
   return (
     <>
-      <Card
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginY: 4,
-        }}
-      >
+      <Card className={classes.responsiveFlex}>
         <CardContent>
           <Typography variant="h5" component="div">
             Delete
@@ -55,7 +59,7 @@ export const DeleteCard: React.FC<DeleteCardProps> = ({
             certain
           </Typography>
         </CardContent>
-        <Box m={3}>
+        <Box className={classes.button}>
           <DeleteButton handleDelete={handleDelete} label={buttonText} />
         </Box>
       </Card>

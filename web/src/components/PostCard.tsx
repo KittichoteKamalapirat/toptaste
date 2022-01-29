@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 interface PostCardProps {
   post: Post;
   pointer?: boolean;
+  index?: number;
 }
 const useStyles = makeStyles((theme: Theme) => ({
   responsiveFlex: {
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const PostCard: React.FC<PostCardProps> = ({
   post,
   pointer = false,
+  index = 1,
 }) => {
   const navigate = useNavigate();
   const classes = useStyles();
@@ -42,6 +44,7 @@ export const PostCard: React.FC<PostCardProps> = ({
         cursor: pointer ? "pointer" : null,
       }}
       onClick={() => navigate(`/restaurant/${post.id}`)}
+      data-test={`restaurant-card-${index + 1}`}
     >
       <Box sx={{ flexBasis: "30%" }}>
         <Box
@@ -68,22 +71,25 @@ export const PostCard: React.FC<PostCardProps> = ({
         </Box>
       </Box>
 
-      <div>
+      <Box margin={4}>
         <Typography variant="h5" component="h2" sx={{ fontWeight: "bold" }}>
           {post.title}
         </Typography>
         <Box sx={{ display: "flex" }}>
           <Rating name="read-only" value={post.reviewAvg} readOnly />
           <Typography component="legend">
-            {post.reviewAvg.toFixed(1)}
+            {post.reviewAvg && post.reviewAvg.toFixed(1)}
           </Typography>
           <Typography component="legend">
             ( {post.reviewsSum} {post.reviewsSum !== 1 ? "reviews" : "review"} )
           </Typography>
         </Box>
-
-        <Typography variant="subtitle1">{post.text}</Typography>
-      </div>
+        <Box marginY={2}>
+          <Typography variant="subtitle1" data-test="restaurant description">
+            {post.text}
+          </Typography>
+        </Box>
+      </Box>
     </Card>
   );
 };

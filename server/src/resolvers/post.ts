@@ -19,6 +19,7 @@ import { Post } from "../entities/Post";
 import { getConnection } from "typeorm";
 import { User } from "../entities/User";
 import { isAdmin } from "../middlware/isAdmin";
+import { IMG_PLACEHOLDER } from "../constants";
 
 @InputType()
 class PostInput {
@@ -40,7 +41,7 @@ class PaginatedPosts {
 
 @Resolver(Post)
 export class PostResolver {
-  //trim text
+  //trim textg
   @FieldResolver(() => String)
   textSnippet(@Root() root: Post) {
     return root.text.slice(0, 50);
@@ -72,10 +73,10 @@ export class PostResolver {
 
     const posts = await getConnection().query(
       `
-      select p.*
+      select p.*, COALESCE("reviewsSum"/NULLIF("reviewsCounter", 0),0 ) AS "reviewAvg"
       from post p
       ${cursor ? `where p."createdAt" < $2` : ""}
-      order by p."createdAt" DESC
+      order by "reviewAvg" DESC
       limit $1
       `,
       replacements
@@ -101,6 +102,9 @@ export class PostResolver {
     @Arg("input") input: PostInput,
     @Ctx() { req }: MyContext
   ): Promise<Post> {
+    if (input.url === "") {
+      input.url = IMG_PLACEHOLDER;
+    }
     return Post.create({ ...input, creatorId: req.session.userId }).save();
   }
 
@@ -113,6 +117,9 @@ export class PostResolver {
     @Arg("input") input: PostInput,
     @Ctx() { req }: MyContext
   ): Promise<Post | null> {
+    if (input.url === "") {
+      input.url = IMG_PLACEHOLDER;
+    }
     const result = await getConnection()
       .createQueryBuilder()
       .update(Post)

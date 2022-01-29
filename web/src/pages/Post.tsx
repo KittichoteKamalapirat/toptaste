@@ -29,7 +29,10 @@ interface PostProps {}
 
 export const Post: React.FC<PostProps> = ({}) => {
   const params = useParams();
+
   const navigate = useNavigate();
+  // const context = useContext(UserContext);
+
   const { currentUser } = useContext(UserContext);
 
   const [deletePost] = useDeletePostMutation();
@@ -43,15 +46,15 @@ export const Post: React.FC<PostProps> = ({}) => {
     },
   });
 
-  const { data: latest } = useLatestReviewQuery({
+  const { data: latest, loading: latestLoading } = useLatestReviewQuery({
     variables: { postId: parseInt(params.id!) },
   });
 
-  const { data: best } = useBestReviewQuery({
+  const { data: best, loading: bestLoading } = useBestReviewQuery({
     variables: { postId: parseInt(params.id!) },
   });
 
-  const { data: worst } = useWorstReviewQuery({
+  const { data: worst, loading: worstLoading } = useWorstReviewQuery({
     variables: { postId: parseInt(params.id!) },
   });
 
@@ -70,10 +73,14 @@ export const Post: React.FC<PostProps> = ({}) => {
     }
   };
 
-  if (loading) {
+  if (loading || latestLoading || worstLoading || bestLoading) {
     return <Loading />;
   } else if (error || post?.post === null) {
     navigate(-1);
+  }
+
+  if (error) {
+    console.log(error.message);
   }
 
   return (
@@ -154,7 +161,7 @@ export const Post: React.FC<PostProps> = ({}) => {
         </Button>
       </XCenter>
 
-      {currentUser.isAdmin && (
+      {currentUser && currentUser.isAdmin && (
         <>
           <EditCard
             buttonText="Edit this restaurant"
@@ -162,7 +169,7 @@ export const Post: React.FC<PostProps> = ({}) => {
           />
 
           <DeleteCard
-            buttonText="Delete the restaurant"
+            buttonText="Delete this restaurant"
             handleDelete={handleDelete}
           />
         </>

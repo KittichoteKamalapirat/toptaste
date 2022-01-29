@@ -7,10 +7,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDeletePostMutation, usePostsQuery } from "../generated/graphql";
 import { DeleteButton } from "./DeleteButton";
 import Loading from "./Loading";
+import LaunchIcon from "@mui/icons-material/Launch";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 
 export const RestaurantsTable = () => {
   const [deletePost] = useDeletePostMutation();
+  const navigate = useNavigate();
 
   const handleDelete = async (postId: number) => {
     const { errors } = await deletePost({
@@ -43,7 +45,27 @@ export const RestaurantsTable = () => {
   const columns = [
     { field: "id", headerName: "ID", width: 60 },
     { field: "userId", headerName: "user id", width: 70 },
-    { field: "title", headerName: "Restaurant Name", width: 200 },
+    {
+      field: "title",
+      headerName: "Restaurant Name",
+      width: 250,
+      renderCell: (params: GridRenderCellParams) => {
+        const id = params.value.id;
+        const title = params.value.title;
+        return (
+          <Button
+            variant="text"
+            color="inherit"
+            onClick={() => {
+              navigate(`/restaurant/${id}`);
+            }}
+            startIcon={<LaunchIcon />}
+          >
+            <Typography noWrap>{title}</Typography>
+          </Button>
+        );
+      },
+    },
     {
       field: "url",
       headerName: "Image",
@@ -82,7 +104,7 @@ export const RestaurantsTable = () => {
   const rows = postsData?.posts.posts.map((post) => {
     return {
       id: post.id,
-      title: post.title,
+      title: { id: post.id, title: post.title },
       userId: post.creator.id,
       url: post.url,
       actions: post.id,

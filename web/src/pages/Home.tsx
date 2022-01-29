@@ -1,11 +1,11 @@
-import React from "react";
-import { Post, usePostsQuery } from "../generated/graphql";
-import Box from "@mui/material/Box";
-
-import { XContainer } from "../components/layouts/XContainer";
-import { XCenter } from "../components/layouts/XCenter";
-import { PostCard } from "../components/PostCard";
 import { Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import React from "react";
+import { XCenter } from "../components/layouts/XCenter";
+import { XContainer } from "../components/layouts/XContainer";
+import Loading from "../components/Loading";
+import { PostCard } from "../components/PostCard";
+import { Post, usePostsQuery } from "../generated/graphql";
 
 interface HomeProps {}
 
@@ -16,12 +16,20 @@ export const Home: React.FC<HomeProps> = ({}) => {
       cursor: null as null | string,
     },
   });
-  console.log({ data });
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    console.log(error.message);
+  }
+
   return (
     <XContainer>
-      {data?.posts.posts.map((post) => (
-        <Box key={post.id}>
-          <PostCard post={post as Post} pointer={true} />
+      {data?.posts.posts.map((post, index) => (
+        <Box key={(post && post.id && post.id.toString()) || Math.random()}>
+          <PostCard post={post as Post} pointer={true} index={index} />
         </Box>
       ))}
 

@@ -1,12 +1,11 @@
-import React from "react";
-import { XYCenter } from "../components/layouts/XYCenter";
+import { Box, Button, Typography } from "@mui/material";
 import { Field, Form, Formik } from "formik";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { InputField } from "../components/InputField";
 import { XCenter } from "../components/layouts/XCenter";
-import { ValuesOfCorrectTypeRule } from "graphql";
+import { XYCenter } from "../components/layouts/XYCenter";
 import { useCreatePostMutation } from "../generated/graphql";
-import { Box, Typography, Button } from "@mui/material";
 
 interface CreatePostProps {}
 
@@ -41,7 +40,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({}) => {
               });
 
               if (!errors) {
-                navigate("/");
+                navigate(`/restaurant/${data?.createPost.id}`);
               }
             } catch (error) {
               console.log(error);

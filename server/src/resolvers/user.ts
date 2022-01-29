@@ -140,7 +140,11 @@ export class UserResolver {
   @UseMiddleware(isAdmin)
   @Query(() => [User])
   async users(): Promise<User[] | undefined> {
-    const users = await User.find();
+    const users = await User.find({
+      order: {
+        createdAt: "DESC",
+      },
+    });
     return users;
   }
 
@@ -361,6 +365,7 @@ export class UserResolver {
 
       return true;
     } catch (error) {
+      console.log(error.message);
       return new Error("cannot delete this user");
     }
   }

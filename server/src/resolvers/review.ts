@@ -92,7 +92,11 @@ export class ReviewResolver {
   @Query(() => [Review])
   async allReviews(): Promise<Review[] | Error> {
     try {
-      return Review.find();
+      return Review.find({
+        order: {
+          visitedDate: "DESC",
+        },
+      });
     } catch (error) {
       console.log(error);
       return new Error("Cannot get all the reviews ");
@@ -234,7 +238,7 @@ export class ReviewResolver {
             select r.*
             from review r
             where r."postId" = ${postId}
-            order by r."createdAt" DESC
+            order by r."visitedDate" DESC, r."score" DESC
             limit 1
             `
       );
@@ -256,7 +260,7 @@ export class ReviewResolver {
             select r.*
             from review r
             where r."postId" = ${postId}
-            order by r."score" DESC
+            order by r."score" DESC, r."visitedDate" DESC
             limit 1
             `
       );
@@ -278,7 +282,7 @@ export class ReviewResolver {
             select r.*
             from review r
             where r."postId" = ${postId}
-            order by r."score" ASC
+            order by r."score" ASC,r."visitedDate" DESC
             limit 1
             `
       );
