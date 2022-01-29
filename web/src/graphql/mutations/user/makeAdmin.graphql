@@ -1,0 +1,3 @@
+mutation makeAdmin($id: Int!, $beAdmin: Boolean!) {
+  makeAdmin(id: $id, beAdmin: $beAdmin)
+}

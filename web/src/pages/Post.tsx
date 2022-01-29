@@ -1,13 +1,8 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-} from "@mui/material";
-import React, { useContext, useEffect } from "react";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import React, { useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { DeleteCard } from "../components/DeleteCard";
+import { EditCard } from "../components/EditCard";
 import { XCenter } from "../components/layouts/XCenter";
 import { XContainer } from "../components/layouts/XContainer";
 import Loading from "../components/Loading";
@@ -21,8 +16,6 @@ import {
   usePostQuery,
   useWorstReviewQuery,
 } from "../generated/graphql";
-import { EditCard } from "../components/EditCard";
-import { DeleteCard } from "../components/DeleteCard";
 import { UserContext } from "../util/UserContext";
 
 interface PostProps {}
@@ -86,15 +79,33 @@ export const Post: React.FC<PostProps> = ({}) => {
   return (
     <XContainer>
       <Box>
-        <Button
-          variant="outlined"
-          color="inherit"
-          onClick={() => {
-            navigate(-1);
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          Go back
-        </Button>
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Go back
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() =>
+              navigate(`/restaurant/${post?.post?.id}/review/create`)
+            }
+          >
+            Create a review
+          </Button>
+        </Box>
+
         <PostCard post={post?.post as PostType} />
         <Grid container spacing={4}>
           {post?.post?.reviewsSum && post.post.reviewsSum > 0 ? (
@@ -148,18 +159,6 @@ export const Post: React.FC<PostProps> = ({}) => {
           )}
         </Grid>
       </Box>
-
-      <XCenter>
-        <Button
-          variant="contained"
-          onClick={() =>
-            navigate(`/restaurant/${post?.post?.id}/review/create`)
-          }
-          sx={{ marginTop: 4 }}
-        >
-          Create a review
-        </Button>
-      </XCenter>
 
       {currentUser && currentUser.isAdmin && (
         <>

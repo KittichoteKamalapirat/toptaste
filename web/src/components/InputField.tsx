@@ -9,6 +9,7 @@ export const InputField: React.FC<FieldProps & TextFieldProps> = ({
 }) => {
   return (
     <TextField
+      sx={{ width: "100%" }}
       label={placeholder}
       placeholder={placeholder}
       {...field}

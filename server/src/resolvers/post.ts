@@ -1,5 +1,3 @@
-import { isAuth } from "../middlware/isAuth";
-import { MyContext } from "../types";
 import {
   Arg,
   Ctx,
@@ -15,11 +13,12 @@ import {
   Root,
   UseMiddleware,
 } from "type-graphql";
-import { Post } from "../entities/Post";
 import { getConnection } from "typeorm";
+import { IMG_PLACEHOLDER } from "../constants";
+import { Post } from "../entities/Post";
 import { User } from "../entities/User";
 import { isAdmin } from "../middlware/isAdmin";
-import { IMG_PLACEHOLDER } from "../constants";
+import { MyContext } from "../types";
 
 @InputType()
 class PostInput {
@@ -137,11 +136,8 @@ export class PostResolver {
   //only admin
   @Mutation(() => Boolean)
   @UseMiddleware(isAdmin)
-  async deletePost(
-    @Arg("id", () => Int) id: number,
-    @Ctx() { req }: MyContext
-  ): Promise<boolean> {
-    await Post.delete({ id: id, creatorId: req.session.userId });
+  async deletePost(@Arg("id", () => Int) id: number): Promise<boolean> {
+    await Post.delete({ id: id });
     return true;
   }
 

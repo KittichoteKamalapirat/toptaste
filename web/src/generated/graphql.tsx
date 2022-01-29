@@ -35,6 +35,7 @@ export type Mutation = {
   forgotPassword: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
+  makeAdmin: Scalars['Boolean'];
   register: UserResponse;
   updatePost?: Maybe<Post>;
   updateReview: Review;
@@ -88,6 +89,12 @@ export type MutationForgotPasswordArgs = {
 export type MutationLoginArgs = {
   password: Scalars['String'];
   usernameOrEmail: Scalars['String'];
+};
+
+
+export type MutationMakeAdminArgs = {
+  beAdmin: Scalars['Boolean'];
+  id: Scalars['Int'];
 };
 
 
@@ -337,6 +344,14 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
+export type MakeAdminMutationVariables = Exact<{
+  id: Scalars['Int'];
+  beAdmin: Scalars['Boolean'];
+}>;
+
+
+export type MakeAdminMutation = { __typename?: 'Mutation', makeAdmin: boolean };
 
 export type RegisterMutationVariables = Exact<{
   data: UsernamePasswordInput;
@@ -883,6 +898,38 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const MakeAdminDocument = gql`
+    mutation makeAdmin($id: Int!, $beAdmin: Boolean!) {
+  makeAdmin(id: $id, beAdmin: $beAdmin)
+}
+    `;
+export type MakeAdminMutationFn = Apollo.MutationFunction<MakeAdminMutation, MakeAdminMutationVariables>;
+
+/**
+ * __useMakeAdminMutation__
+ *
+ * To run a mutation, you first call `useMakeAdminMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMakeAdminMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [makeAdminMutation, { data, loading, error }] = useMakeAdminMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      beAdmin: // value for 'beAdmin'
+ *   },
+ * });
+ */
+export function useMakeAdminMutation(baseOptions?: Apollo.MutationHookOptions<MakeAdminMutation, MakeAdminMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MakeAdminMutation, MakeAdminMutationVariables>(MakeAdminDocument, options);
+      }
+export type MakeAdminMutationHookResult = ReturnType<typeof useMakeAdminMutation>;
+export type MakeAdminMutationResult = Apollo.MutationResult<MakeAdminMutation>;
+export type MakeAdminMutationOptions = Apollo.BaseMutationOptions<MakeAdminMutation, MakeAdminMutationVariables>;
 export const RegisterDocument = gql`
     mutation Register($data: UsernamePasswordInput!) {
   register(data: $data) {

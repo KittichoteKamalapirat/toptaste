@@ -25,8 +25,8 @@ export const Register: React.FC<registerProps> = ({}) => {
 
   return (
     <XYCenter>
-      <Box>
-        <Box textAlign="center">
+      <Box minWidth={"30%"}>
+        <Box marginBottom={4} textAlign="center">
           <Typography variant="h5" component="h2">
             Create Account
           </Typography>
@@ -96,7 +96,7 @@ export const Register: React.FC<registerProps> = ({}) => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                //   isLoading={isSubmitting}
+                fullWidth
               >
                 Register
               </Button>

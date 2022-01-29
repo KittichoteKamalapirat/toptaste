@@ -2,6 +2,7 @@ import { Box, Card, CardContent, Theme, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { DeleteButton } from "./DeleteButton";
+
 interface DeleteCardProps {
   buttonText: string;
   handleDelete: () => void;
@@ -36,14 +37,6 @@ export const DeleteCard: React.FC<DeleteCardProps> = ({
   handleDelete,
 }) => {
   const [open, setOpen] = useState<boolean>(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const classes = useStyles();
   return (

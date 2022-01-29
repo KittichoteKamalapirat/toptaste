@@ -18,6 +18,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   handleDelete,
   transparent = false,
   label = null,
+  ...props
 }) => {
   const [open, setOpen] = useState<boolean>(false);
 
@@ -36,6 +37,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
         color="secondary"
         variant={transparent ? "text" : "contained"}
         onClick={handleClickOpen}
+        {...props}
       >
         {label}
       </Button>

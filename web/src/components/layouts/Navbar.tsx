@@ -76,7 +76,7 @@ const Navbar = () => {
             sx={{ mr: 2, flexGrow: 1 }}
           >
             <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-              LOGO
+              TOPDEL
             </Link>
           </Typography>
 

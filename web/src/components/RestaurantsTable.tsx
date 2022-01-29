@@ -54,14 +54,16 @@ export const RestaurantsTable = () => {
         const title = params.value.title;
         return (
           <Button
-            variant="text"
+            variant="outlined"
             color="inherit"
             onClick={() => {
               navigate(`/restaurant/${id}`);
             }}
             startIcon={<LaunchIcon />}
           >
-            <Typography noWrap>{title}</Typography>
+            <Typography noWrap variant="caption">
+              {title}
+            </Typography>
           </Button>
         );
       },

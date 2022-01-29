@@ -24,7 +24,7 @@ export const UpdateUser: React.FC<updateUserProps> = ({}) => {
   return (
     <XYCenter>
       <Box>
-        <Box textAlign="center">
+        <Box marginBottom={4} textAlign="center">
           <Typography variant="h5" component="h2">
             Update User Account
           </Typography>
@@ -88,7 +88,7 @@ export const UpdateUser: React.FC<updateUserProps> = ({}) => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                //   isLoading={isSubmitting}
+                fullWidth
               >
                 Update
               </Button>

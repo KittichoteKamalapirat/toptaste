@@ -23,8 +23,8 @@ export const Login: React.FC<loginProps> = ({}) => {
 
   return (
     <XYCenter>
-      <Box>
-        <Box textAlign="center">
+      <Box minWidth={"30%"}>
+        <Box marginBottom={4} textAlign="center">
           <Typography variant="h5" component="h2">
             Log in
           </Typography>
@@ -68,7 +68,6 @@ export const Login: React.FC<loginProps> = ({}) => {
                 type="usernameOrEmail"
               />
               <Box mt={4}>
-                {/* {" "} */}
                 <Field
                   name="password"
                   placeholder="password"

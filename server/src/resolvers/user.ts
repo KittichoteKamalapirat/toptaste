@@ -11,6 +11,7 @@ import {
   Resolver,
   UseMiddleware,
   Int,
+  Args,
 } from "type-graphql";
 import argon2 from "argon2";
 import { MyContext } from "../types";
@@ -136,7 +137,6 @@ export class UserResolver {
   }
 
   //get all user
-
   @UseMiddleware(isAdmin)
   @Query(() => [User])
   async users(): Promise<User[] | undefined> {
@@ -367,6 +367,30 @@ export class UserResolver {
     } catch (error) {
       console.log(error.message);
       return new Error("cannot delete this user");
+    }
+  }
+
+  @UseMiddleware(isAdmin)
+  @Mutation(() => Boolean)
+  async makeAdmin(
+    @Arg("id", () => Int) id: number,
+    @Arg("beAdmin") beAdmin: boolean,
+    @Ctx() { req }: MyContext
+  ): Promise<boolean | Error> {
+    if (req.session.userId === id) {
+      return new Error("Cannot update yourself");
+    }
+    try {
+      await User.update(
+        { id: id },
+        {
+          isAdmin: beAdmin,
+        }
+      );
+      return true;
+    } catch (error) {
+      console.log(error);
+      return new Error(error);
     }
   }
 }
