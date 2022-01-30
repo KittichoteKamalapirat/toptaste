@@ -71,98 +71,119 @@ export const UpdateReview: React.FC<UpdateReviewProps> = ({}) => {
 
   return (
     <XContainer>
-      <XCenter>
-        <Box>
-          <PostCard post={postData?.post as PostType} />
-          <Typography variant="h4" component="h2">
+      <Box>
+        <PostCard post={postData?.post as PostType} />
+
+        <Box marginY={4}>
+          <Typography
+            variant="h5"
+            fontWeight={"bold"}
+            component="h2"
+            textAlign={"center"}
+          >
             Update a review
           </Typography>
+        </Box>
 
-          <Formik
-            initialValues={{
-              comment: reviewData?.review.comment,
-            }}
-            onSubmit={async (values) => {
-              try {
-                console.log("score", score);
-                console.log("comment", values.comment);
-                console.log("date", date?.toISOString());
-                const { data, errors } = await updateReview({
-                  variables: {
-                    id: parseInt(params.reviewId as string),
-                    postId: parseInt(params.postId as string),
-                    input: {
-                      score: score as number,
-                      comment: values.comment as string,
-                      visitedDate: date?.toISOString(),
-                    },
+        <Formik
+          initialValues={{
+            comment: reviewData?.review.comment,
+          }}
+          onSubmit={async (values) => {
+            try {
+              const { data, errors } = await updateReview({
+                variables: {
+                  id: parseInt(params.reviewId as string),
+                  postId: parseInt(params.postId as string),
+                  input: {
+                    score: score as number,
+                    comment: values.comment as string,
+                    visitedDate: date?.toISOString(),
                   },
-                  update: (cache) => {
-                    cache.evict({ fieldName: "bestReview" });
-                    cache.evict({ fieldName: "worstReview" });
-                    cache.evict({ fieldName: "latestReview" });
-                    cache.evict({ fieldName: "post" });
-                  },
-                });
+                },
+                update: (cache) => {
+                  cache.evict({ fieldName: "bestReview" });
+                  cache.evict({ fieldName: "worstReview" });
+                  cache.evict({ fieldName: "latestReview" });
+                  cache.evict({ fieldName: "post" });
+                },
+              });
 
-                if (!errors) {
-                  // navigate(`/restaurant/${params.id}`);
-                  navigate("/admin");
-                }
-              } catch (error) {
-                console.log(error);
+              if (!errors) {
+                // navigate(`/restaurant/${params.id}`);
+                navigate("/admin");
               }
-            }}
-          >
-            {() => (
-              <Form>
-                <Box>
-                  {" "}
+            } catch (error) {
+              console.log(error);
+            }
+          }}
+        >
+          {() => (
+            <Form>
+              <Box>
+                <XCenter>
                   <Rating
                     name="simple-controlled"
-                    style={{ fontSize: "50px" }}
+                    sx={{
+                      marginTop: 2,
+                      fontSize: 50,
+                    }}
                     value={score}
                     onChange={(event, newValue) => {
                       setScore(newValue!);
                     }}
+                    data-test="rating"
                   />
-                </Box>
+                </XCenter>
+              </Box>
 
+              <Box sx={{ marginTop: 2 }}>
+                <Typography marginBottom={2}>Visited Date</Typography>
                 <LocalizationProvider dateAdapter={DateAdapter}>
                   <DesktopDatePicker
                     label="Date desktop"
                     inputFormat="MM/dd/yyyy"
                     value={date}
                     onChange={handleChange}
-                    renderInput={(params: any) => <TextField {...params} />}
+                    renderInput={(params: any) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        placeholder="Visited Date"
+                        required
+                      />
+                    )}
                   />
                 </LocalizationProvider>
-                <Box m={4}>
-                  <Field
-                    name="comment"
-                    placeholder="Leave a comment"
-                    component={InputField}
-                    type="text"
-                    multiline
-                    maxRows={4}
-                    required
-                  />
-                </Box>
-                <XCenter>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                  >
-                    Update
-                  </Button>
-                </XCenter>
-              </Form>
-            )}
-          </Formik>
-        </Box>
-      </XCenter>
+              </Box>
+
+              <Box marginY={4}>
+                <Field
+                  name="comment"
+                  placeholder="Leave a comment?"
+                  component={InputField}
+                  type="comment"
+                  multiline
+                  maxRows={4}
+                  rows={4}
+                  fullWidth
+                />
+              </Box>
+
+              <XCenter>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Update
+                </Button>
+              </XCenter>
+            </Form>
+          )}
+        </Formik>
+      </Box>
     </XContainer>
   );
 };

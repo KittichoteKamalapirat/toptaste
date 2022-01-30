@@ -134,6 +134,7 @@ export type Post = {
   creatorId: Scalars['Float'];
   id: Scalars['Float'];
   reviewAvg: Scalars['Float'];
+  reviews: Array<Review>;
   reviewsCounter: Scalars['Int'];
   reviewsSum: Scalars['Int'];
   text: Scalars['String'];
@@ -207,7 +208,7 @@ export type QueryWorstReviewArgs = {
 
 export type Review = {
   __typename?: 'Review';
-  comment: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
   id: Scalars['Int'];
   post: Post;
@@ -284,7 +285,7 @@ export type CreateReviewMutationVariables = Exact<{
 }>;
 
 
-export type CreateReviewMutation = { __typename?: 'Mutation', createReview: { __typename?: 'Review', id: number, comment: string, score: number, visitedDate: string } };
+export type CreateReviewMutation = { __typename?: 'Mutation', createReview: { __typename?: 'Review', id: number, comment?: string | null | undefined, score: number, visitedDate: string } };
 
 export type DeleteReviewMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -301,7 +302,7 @@ export type UpdateReviewMutationVariables = Exact<{
 }>;
 
 
-export type UpdateReviewMutation = { __typename?: 'Mutation', updateReview: { __typename?: 'Review', id: number, comment: string, score: number, visitedDate: string } };
+export type UpdateReviewMutation = { __typename?: 'Mutation', updateReview: { __typename?: 'Review', id: number, comment?: string | null | undefined, score: number, visitedDate: string } };
 
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -373,7 +374,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: number, title: string, text: string, textSnippet: string, url?: string | null | undefined, createdAt: string, updatedAt: string, reviewsSum: number, reviewsCounter: number, reviewAvg: number, creator: { __typename?: 'User', id: number, username: string } } | null | undefined };
+export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: number, title: string, text: string, textSnippet: string, url?: string | null | undefined, createdAt: string, reviewsSum: number, reviewsCounter: number, reviewAvg: number, reviews: Array<{ __typename?: 'Review', id: number, score: number, comment?: string | null | undefined, visitedDate: string, user: { __typename?: 'User', username: string } }>, creator: { __typename?: 'User', id: number, username: string } } | null | undefined };
 
 export type PostsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -386,42 +387,42 @@ export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'Paginate
 export type AllReviewsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllReviewsQuery = { __typename?: 'Query', allReviews: Array<{ __typename?: 'Review', id: number, comment: string, score: number, visitedDate: string, userId: number, postId: number }> };
+export type AllReviewsQuery = { __typename?: 'Query', allReviews: Array<{ __typename?: 'Review', id: number, comment?: string | null | undefined, score: number, visitedDate: string, userId: number, postId: number }> };
 
 export type BestReviewQueryVariables = Exact<{
   postId: Scalars['Int'];
 }>;
 
 
-export type BestReviewQuery = { __typename?: 'Query', bestReview: { __typename?: 'Review', score: number, comment: string, visitedDate: string } };
+export type BestReviewQuery = { __typename?: 'Query', bestReview: { __typename?: 'Review', score: number, comment?: string | null | undefined, visitedDate: string, user: { __typename?: 'User', username: string } } };
 
 export type LatestReviewQueryVariables = Exact<{
   postId: Scalars['Int'];
 }>;
 
 
-export type LatestReviewQuery = { __typename?: 'Query', latestReview: { __typename?: 'Review', score: number, comment: string, visitedDate: string } };
+export type LatestReviewQuery = { __typename?: 'Query', latestReview: { __typename?: 'Review', score: number, comment?: string | null | undefined, visitedDate: string, user: { __typename?: 'User', username: string } } };
 
 export type ReviewQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type ReviewQuery = { __typename?: 'Query', review: { __typename?: 'Review', id: number, comment: string, score: number, visitedDate: string, userId: number, postId: number } };
+export type ReviewQuery = { __typename?: 'Query', review: { __typename?: 'Review', id: number, comment?: string | null | undefined, score: number, visitedDate: string, userId: number, postId: number } };
 
 export type ReviewsQueryVariables = Exact<{
   postId: Scalars['Int'];
 }>;
 
 
-export type ReviewsQuery = { __typename?: 'Query', reviews: Array<{ __typename?: 'Review', id: number, score: number, visitedDate: string, user: { __typename?: 'User', id: number, username: string } }> };
+export type ReviewsQuery = { __typename?: 'Query', reviews: Array<{ __typename?: 'Review', id: number, score: number, visitedDate: string, comment?: string | null | undefined, user: { __typename?: 'User', id: number, username: string } }> };
 
 export type WorstReviewQueryVariables = Exact<{
   postId: Scalars['Int'];
 }>;
 
 
-export type WorstReviewQuery = { __typename?: 'Query', worstReview: { __typename?: 'Review', score: number, comment: string, visitedDate: string } };
+export type WorstReviewQuery = { __typename?: 'Query', worstReview: { __typename?: 'Review', score: number, comment?: string | null | undefined, visitedDate: string, user: { __typename?: 'User', username: string } } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1000,10 +1001,31 @@ export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMut
 export const PostDocument = gql`
     query Post($id: Int!) {
   post(id: $id) {
-    ...PostSnippet
+    id
+    title
+    text
+    textSnippet
+    url
+    createdAt
+    reviews {
+      id
+      score
+      comment
+      visitedDate
+      user {
+        username
+      }
+    }
+    reviewsSum
+    reviewsCounter
+    reviewAvg
+    creator {
+      id
+      username
+    }
   }
 }
-    ${PostSnippetFragmentDoc}`;
+    `;
 
 /**
  * __usePostQuery__
@@ -1116,6 +1138,9 @@ export const BestReviewDocument = gql`
     score
     comment
     visitedDate
+    user {
+      username
+    }
   }
 }
     `;
@@ -1153,6 +1178,9 @@ export const LatestReviewDocument = gql`
     score
     comment
     visitedDate
+    user {
+      username
+    }
   }
 }
     `;
@@ -1230,6 +1258,7 @@ export const ReviewsDocument = gql`
     id
     score
     visitedDate
+    comment
     user {
       id
       username
@@ -1271,6 +1300,9 @@ export const WorstReviewDocument = gql`
     score
     comment
     visitedDate
+    user {
+      username
+    }
   }
 }
     `;

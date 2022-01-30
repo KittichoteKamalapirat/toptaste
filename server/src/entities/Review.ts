@@ -19,8 +19,8 @@ export class Review extends BaseEntity {
   @Field(() => Int)
   id: number;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   comment: string;
 
   @Field(() => Int)

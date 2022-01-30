@@ -42,6 +42,7 @@ export class ReviewResolver {
     @Ctx() { req }: MyContext
   ): Promise<Review | Error> {
     try {
+      console.log("1");
       //User can only review one post one time
       //   const existingReview = await Review.find({
       //     where: {
@@ -55,8 +56,10 @@ export class ReviewResolver {
       //   }
 
       //input has to be within 1-5
+
       if (input.score > 5 || input.score < 1) {
-        return new Error("Invalid score input");
+        console.log("Invalid score input. Rating has to be between 1-5");
+        return new Error("Invalid score input. Rating has to be between 1-5");
       }
 
       const post = await Post.findOne({ id: postId });
@@ -87,7 +90,7 @@ export class ReviewResolver {
     }
   }
 
-  //get all reviews in the database
+  //get all reviews in the databasere
   @UseMiddleware(isAuth)
   @Query(() => [Review])
   async allReviews(): Promise<Review[] | Error> {
@@ -125,6 +128,7 @@ export class ReviewResolver {
       return Review.find({
         where: { postId },
         relations: ["user", "post"],
+        order: { visitedDate: "DESC" },
       });
     } catch (error) {
       console.log(error);
@@ -244,6 +248,12 @@ export class ReviewResolver {
       );
       const latestReview = result[0] as Review;
 
+      const userId = latestReview.userId;
+      const user = await User.findOne(userId);
+      if (user) {
+        latestReview.user = user;
+      }
+
       return latestReview;
     } catch (error) {
       return new Error("cannot find the review");
@@ -264,7 +274,14 @@ export class ReviewResolver {
             limit 1
             `
       );
+
       const bestReview = result[0] as Review;
+
+      const userId = bestReview.userId;
+      const user = await User.findOne(userId);
+      if (user) {
+        bestReview.user = user;
+      }
 
       return bestReview;
     } catch (error) {
@@ -287,6 +304,11 @@ export class ReviewResolver {
             `
       );
       const worstReview = result[0] as Review;
+      const userId = worstReview.userId;
+      const user = await User.findOne(userId);
+      if (user) {
+        worstReview.user = user;
+      }
 
       return worstReview;
     } catch (error) {

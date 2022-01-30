@@ -3,5 +3,8 @@ query LatestReview($postId: Int!) {
     score
     comment
     visitedDate
+    user {
+      username
+    }
   }
 }

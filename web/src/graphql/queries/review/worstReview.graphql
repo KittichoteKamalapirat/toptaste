@@ -3,5 +3,8 @@ query WorstReview($postId: Int!) {
     score
     comment
     visitedDate
+    user {
+      username
+    }
   }
 }

@@ -67,6 +67,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({}) => {
                   type="text"
                   multiline
                   maxRows={4}
+                  rows={4}
                   required
                 />
               </Box>

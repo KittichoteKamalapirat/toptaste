@@ -14,6 +14,7 @@ import {
   useDeletePostMutation,
   useLatestReviewQuery,
   usePostQuery,
+  useReviewsQuery,
   useWorstReviewQuery,
 } from "../generated/graphql";
 import { UserContext } from "../util/UserContext";
@@ -22,6 +23,9 @@ interface PostProps {}
 
 export const Post: React.FC<PostProps> = ({}) => {
   const params = useParams();
+  const { data: reviewsData, loading: reviewsLoading } = useReviewsQuery({
+    variables: { postId: parseInt(params.id!) },
+  });
 
   const navigate = useNavigate();
   // const context = useContext(UserContext);
@@ -84,6 +88,7 @@ export const Post: React.FC<PostProps> = ({}) => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            marginY: "10px",
           }}
         >
           <Button
@@ -107,56 +112,73 @@ export const Post: React.FC<PostProps> = ({}) => {
         </Box>
 
         <PostCard post={post?.post as PostType} />
-        <Grid container spacing={4}>
-          {post?.post?.reviewsSum && post.post.reviewsSum > 0 ? (
-            <Grid item xs={12}>
+        <Grid container spacing={4} marginTop={1}>
+          <Grid item xs={12} md={6}>
+            {post?.post?.reviewsSum && post.post.reviewsSum > 0 ? (
               <ReviewCard
-                label="Average Review"
+                label="Average Rating"
                 score={post?.post?.reviewAvg!}
+                reviewsCounter={post.post.reviewsCounter}
               />
-            </Grid>
-          ) : (
-            <XCenter>
-              <Box sx={{ marginTop: 10 }}>
-                <Typography variant="h6">
-                  There are currently no reviews yet
-                </Typography>
-              </Box>
-            </XCenter>
-          )}
+            ) : (
+              <XCenter>
+                <Box sx={{ marginTop: 4 }}>
+                  <Typography variant="h6">
+                    There are currently no reviews yet
+                  </Typography>
+                </Box>
+              </XCenter>
+            )}
 
-          {best?.bestReview && (
-            <Grid item xs={12} md={4}>
+            {best?.bestReview && (
               <ReviewCard
-                label="Best Review"
+                label="Highest Review"
                 score={best?.bestReview.score!}
-                comment={best?.bestReview.comment}
                 visitedDate={best?.bestReview.visitedDate!}
+                comment={best?.bestReview.comment!}
+                username={best?.bestReview.user.username}
               />
-            </Grid>
-          )}
+            )}
 
-          {latest?.latestReview && (
-            <Grid item xs={12} md={4}>
+            {/* {latest?.latestReview && (
               <ReviewCard
                 label="Latest Review"
                 score={latest?.latestReview.score!}
                 comment={latest?.latestReview.comment!}
                 visitedDate={latest?.latestReview.visitedDate!}
+                username={latest?.latestReview.user.username}
               />
-            </Grid>
-          )}
+            )} */}
 
-          {worst?.worstReview && (
-            <Grid item xs={12} md={4}>
+            {worst?.worstReview && (
               <ReviewCard
-                label="Worst Review"
+                label="Lowest Review"
                 score={worst?.worstReview.score!}
                 comment={worst?.worstReview.comment!}
                 visitedDate={worst.worstReview.visitedDate!}
+                username={worst.worstReview.user.username!}
               />
-            </Grid>
-          )}
+            )}
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Box>
+              <Typography variant="body2" fontWeight={600} component="h4">
+                Recent reviews
+              </Typography>
+              {reviewsData?.reviews
+                .filter((item, index) => index < 5)
+                .map((review) => (
+                  <ReviewCard
+                    score={review.score}
+                    visitedDate={review.visitedDate}
+                    comment={review.comment!}
+                    username={review.user.username}
+                  />
+                ))}
+            </Box>
+          </Grid>
+          {/* review avg card */}
         </Grid>
       </Box>
 

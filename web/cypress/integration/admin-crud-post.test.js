@@ -1,4 +1,4 @@
-describe("admin", () => {
+describe("admin can crud post", () => {
   it("Admin can create, edit, and delete a restaurant", () => {
     //go to home page
     cy.visit("http://localhost:3000");
@@ -25,11 +25,11 @@ describe("admin", () => {
     //fill in the restaurant data and submit
     cy.findByRole("textbox", {
       name: /restaurant name/i,
-    }).type("Japanese Italian Fusion Restaurant in Bangkok");
+    }).type("Thai food in the Centre of London");
 
     cy.findByRole("textbox", {
       name: /description/i,
-    }).type("The first Japanese Italian fusion food in town!!!");
+    }).type("The Best Thai Food in Town!!!");
 
     cy.findByRole("textbox", {
       name: /url image/i,

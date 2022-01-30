@@ -3,6 +3,7 @@ query Reviews($postId: Int!) {
     id
     score
     visitedDate
+    comment
     user {
       id
       username

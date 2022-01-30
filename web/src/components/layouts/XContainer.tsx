@@ -10,7 +10,7 @@ export const XContainer: React.FC<XContainerProps> = ({
   ...props
 }) => {
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="md">
       <Box {...props}>{children}</Box>
     </Container>
   );

@@ -29,6 +29,7 @@ const mocks = [
           url: "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80",
           createdAt: "1643276872384",
           updatedAt: "1643303094908",
+          reviews: [],
           reviewsSum: 14,
           reviewsCounter: 5,
           reviewAvg: 2.8,
@@ -71,7 +72,7 @@ describe("single restaurant page", () => {
     //anyone can see the restaurant card
     const title = await screen.findByText(/italian restaurant @ france/i);
     //anyone can see the average review
-    const reviewAvg = await screen.findByText(/average review/i);
+    const reviewAvg = await screen.findByText(/average rating/i);
     //admin can see the edit button
     const adminEdit = await screen.findByText(/edit this restaurant/i);
     //admin can see the delete button

@@ -90,7 +90,10 @@ export class PostResolver {
   //any users can
   @Query(() => Post, { nullable: true })
   async post(@Arg("id", () => Int) id: number): Promise<Post | undefined> {
-    return Post.findOne(id);
+    return Post.findOne({
+      where: { id: id },
+      relations: ["reviews", "reviews.user"],
+    });
   }
 
   // craete a post
@@ -123,7 +126,8 @@ export class PostResolver {
       .createQueryBuilder()
       .update(Post)
       .set({ ...input })
-      .where('id = :id and "creatorId" = :creatorId', {
+      // .where('id = :id and "creatorId" = :creatorId', {
+      .where("id = :id ", {
         id: id,
         creatorId: req.session.userId,
       })

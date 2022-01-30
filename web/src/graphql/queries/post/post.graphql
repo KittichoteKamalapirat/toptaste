@@ -1,5 +1,27 @@
 query Post($id: Int!) {
   post(id: $id) {
-    ...PostSnippet
+    id
+    title
+    text
+    textSnippet
+    url
+    createdAt
+
+    reviews {
+      id
+      score
+      comment
+      visitedDate
+      user {
+        username
+      }
+    }
+    reviewsSum
+    reviewsCounter
+    reviewAvg
+    creator {
+      id
+      username
+    }
   }
 }

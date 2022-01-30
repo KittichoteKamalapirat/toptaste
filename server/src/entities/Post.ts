@@ -45,6 +45,7 @@ export class Post extends BaseEntity {
   creator: User;
 
   @OneToMany((type) => Review, (review) => review.post, { cascade: true })
+  @Field(() => [Review])
   reviews: Review[];
 
   @Column({ type: "int", default: 0 })

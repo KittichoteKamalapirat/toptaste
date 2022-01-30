@@ -25,7 +25,7 @@ const pages = ["Products", "Pricing", "Blog"];
 const Navbar = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
 
-  const [logout, { loading: logoutLoading }] = useLogoutMutation();
+  const [logout] = useLogoutMutation();
   const apolloClient = useApolloClient();
   const navigate = useNavigate();
 
@@ -63,20 +63,24 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar
-      position="static"
-      style={{ backgroundColor: theme.palette.primary.main }}
-    >
-      <Container maxWidth="xl">
+    <AppBar position="static" style={{ backgroundColor: "white" }}>
+      <Container maxWidth="lg">
         <Toolbar disableGutters>
           <Typography
             variant="h6"
+            component="h1"
             noWrap
-            component="div"
             sx={{ mr: 2, flexGrow: 1 }}
           >
-            <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-              TOPDEL
+            <Link
+              to="/"
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                fontWeight: 900,
+              }}
+            >
+              TopTaste
             </Link>
           </Typography>
 
@@ -87,9 +91,9 @@ const Navbar = () => {
                 {currentUser.isAdmin && (
                   <>
                     <Button
-                      startIcon={<AddBoxIcon style={{ color: "white" }} />}
-                      variant="contained"
-                      color="secondary"
+                      startIcon={<AddBoxIcon />}
+                      variant="outlined"
+                      color="inherit"
                       onClick={() => navigate("/restaurant/create")}
                     >
                       <Typography
@@ -99,7 +103,6 @@ const Navbar = () => {
                         sx={{
                           flexGrow: 1,
                           alignSelf: "flex-end",
-                          color: "white",
                         }}
                       >
                         Add
@@ -107,7 +110,7 @@ const Navbar = () => {
                     </Button>
 
                     <Button
-                      startIcon={<DashboardIcon style={{ color: "white" }} />}
+                      startIcon={<DashboardIcon />}
                       variant="outlined"
                       color="inherit"
                       onClick={() => navigate("/admin")}
@@ -119,7 +122,6 @@ const Navbar = () => {
                         sx={{
                           flexGrow: 1,
                           alignSelf: "flex-end",
-                          color: "white",
                         }}
                       >
                         Dashboard
@@ -131,11 +133,23 @@ const Navbar = () => {
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   {currentUser.isAdmin ? (
                     <Badge badgeContent="Admin" color="secondary">
-                      <Avatar
-                        alt={currentUser.username}
-                        src="/static/images/avatar/2.jpg"
-                        sx={{ bgcolor: deepOrange[500] }}
-                      />
+                      <Badge
+                        badgeContent={currentUser.username}
+                        color="primary"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
+                        }}
+                      >
+                        <Avatar
+                          alt={currentUser.username}
+                          src={
+                            currentUser.username &&
+                            "/static/images/avatar/2.jpg"
+                          }
+                          sx={{ bgcolor: "black" }}
+                        />
+                      </Badge>
                     </Badge>
                   ) : (
                     <Avatar
@@ -170,7 +184,7 @@ const Navbar = () => {
                     sx={{
                       flexGrow: 1,
                       alignSelf: "flex-end",
-                      color: "white",
+                      color: "black",
                     }}
                   >
                     Sign up
@@ -185,8 +199,7 @@ const Navbar = () => {
                     sx={{
                       flexGrow: 1,
                       alignSelf: "flex-end",
-
-                      color: "white",
+                      color: "black",
                     }}
                   >
                     Login

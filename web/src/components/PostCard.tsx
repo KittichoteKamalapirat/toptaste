@@ -1,7 +1,7 @@
 import { Theme } from "@mui/system";
 import React from "react";
 import { Post } from "../generated/graphql";
-import { Box, Card, Rating, Typography } from "@mui/material";
+import { Box, Card, Paper, Rating, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
 
@@ -9,16 +9,25 @@ interface PostCardProps {
   post: Post;
   pointer?: boolean;
   index?: number;
+  snippet?: boolean;
 }
 const useStyles = makeStyles((theme: Theme) => ({
   responsiveFlex: {
-    [theme.breakpoints.down("sm")]: {
-      display: "flex",
+    display: "flex",
+    [theme.breakpoints.down("md")]: {
       flexDirection: "column",
     },
-    [theme.breakpoints.up("sm")]: {
-      display: "flex",
+    [theme.breakpoints.up("md")]: {
       flexDirection: "row",
+    },
+  },
+  responsiveFont: {
+    fontWeight: 900,
+    [theme.breakpoints.down("md")]: {
+      fontSize: "14px",
+    },
+    [theme.breakpoints.up("md")]: {
+      fontSize: "18px",
     },
   },
 }));
@@ -27,26 +36,22 @@ export const PostCard: React.FC<PostCardProps> = ({
   post,
   pointer = false,
   index = 1,
+  snippet = false,
 }) => {
   const navigate = useNavigate();
   const classes = useStyles();
 
   return (
-    <Card
+    <Box
       className={classes.responsiveFlex}
       sx={{
         display: "flex",
-        boxShadow: 1,
-        padding: 2,
-        marginY: 2,
-        borderRadius: 4,
-        gap: 2,
         cursor: pointer ? "pointer" : null,
       }}
       onClick={() => navigate(`/restaurant/${post.id}`)}
       data-test={`restaurant-card-${index + 1}`}
     >
-      <Box sx={{ flexBasis: "30%" }}>
+      <Box sx={{ flexBasis: "40%" }}>
         <Box
           sx={{
             height: 0,
@@ -71,25 +76,29 @@ export const PostCard: React.FC<PostCardProps> = ({
         </Box>
       </Box>
 
-      <Box margin={4}>
-        <Typography variant="h5" component="h2" sx={{ fontWeight: "bold" }}>
+      <Box margin={1} sx={{ flexBasis: "60%" }}>
+        <Typography component="h2" className={classes.responsiveFont}>
           {post.title}
         </Typography>
-        <Box sx={{ display: "flex" }}>
-          <Rating name="read-only" value={post.reviewAvg} readOnly />
-          <Typography component="legend">
-            {post.reviewAvg && post.reviewAvg.toFixed(1)}
-          </Typography>
-          <Typography component="legend">
-            ( {post.reviewsSum} {post.reviewsSum !== 1 ? "reviews" : "review"} )
+        <Box className={classes.responsiveFlex}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography variant="body2" component="legend" fontWeight={"bold"}>
+              {post.reviewAvg && post.reviewAvg.toFixed(1)}
+            </Typography>
+            <Rating name="read-only" value={post.reviewAvg} readOnly />
+          </Box>
+
+          <Typography variant="caption" component="legend">
+            ( {post.reviewsCounter}{" "}
+            {post.reviewsCounter !== 1 ? "reviews" : "review"} )
           </Typography>
         </Box>
-        <Box marginY={2}>
-          <Typography variant="subtitle1" data-test="restaurant description">
-            {post.text}
+        <Box marginY={1}>
+          <Typography variant="caption" data-test="restaurant description">
+            {snippet ? post.textSnippet : post.text}
           </Typography>
         </Box>
       </Box>
-    </Card>
+    </Box>
   );
 };

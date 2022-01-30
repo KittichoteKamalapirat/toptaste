@@ -1,4 +1,4 @@
-describe("admin", () => {
+describe("admin can crud user", () => {
   it("Admin can create, edit, and delete a user", () => {
     //go to home page
     cy.visit("http://localhost:3000");
