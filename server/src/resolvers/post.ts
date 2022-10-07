@@ -72,7 +72,7 @@ export class PostResolver {
 
     const posts = await getConnection().query(
       `
-      select p.*, COALESCE("reviewsSum"/NULLIF("reviewsCounter", 0),0 ) AS "reviewAvg"
+      select p.*, COALESCE(("reviewsSum" * 1.0)/NULLIF("reviewsCounter", 0),0 ) AS "reviewAvg"
       from post p
       ${cursor ? `where p."createdAt" < $2` : ""}
       order by "reviewAvg" DESC

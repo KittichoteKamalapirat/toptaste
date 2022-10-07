@@ -21,6 +21,7 @@ export const RestaurantsTable = () => {
       },
       update: (cache) => {
         cache.evict({ id: "Post:" + postId });
+        cache.evict({ fieldName: "allReviews" });
       },
     });
 

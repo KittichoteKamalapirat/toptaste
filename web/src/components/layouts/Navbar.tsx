@@ -152,11 +152,20 @@ const Navbar = () => {
                       </Badge>
                     </Badge>
                   ) : (
-                    <Avatar
-                      alt={currentUser.username}
-                      src="/static/images/avatar/2.jpg"
-                      sx={{ bgcolor: deepOrange[500] }}
-                    />
+                    <Badge
+                      badgeContent={currentUser.username}
+                      color="primary"
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                      }}
+                    >
+                      <Avatar
+                        alt={currentUser.username}
+                        src="/static/images/avatar/2.jpg"
+                        sx={{ bgcolor: deepOrange[500] }}
+                      />
+                    </Badge>
                   )}
 
                   {/* <Typography color="white">
@@ -268,7 +277,7 @@ const Navbar = () => {
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}
                       >
-                        <AddBoxIcon />
+                        <DashboardIcon />
                         <Typography> Go to dashboard</Typography>
                       </Box>
                     </MenuItem>

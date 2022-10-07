@@ -80,11 +80,7 @@ describe("home page", () => {
     expect(screen.getByText(/loading.../i)).toBeInTheDocument();
 
     const title = await screen.findByText(/italian restaurant @ france/i);
-    // const subtitle = await screen.findByText(
-    //   /one of the most famous restaurants in france/i
-    // );
 
     expect(title).toBeInTheDocument();
-    // expect(subtitle).toBeInTheDocument();
   });
 });

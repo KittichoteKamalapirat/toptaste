@@ -43,9 +43,9 @@ export const Post: React.FC<PostProps> = ({}) => {
     },
   });
 
-  const { data: latest, loading: latestLoading } = useLatestReviewQuery({
-    variables: { postId: parseInt(params.id!) },
-  });
+  // const { data: latest, loading: latestLoading } = useLatestReviewQuery({
+  //   variables: { postId: parseInt(params.id!) },
+  // });
 
   const { data: best, loading: bestLoading } = useBestReviewQuery({
     variables: { postId: parseInt(params.id!) },
@@ -70,7 +70,7 @@ export const Post: React.FC<PostProps> = ({}) => {
     }
   };
 
-  if (loading || latestLoading || worstLoading || bestLoading) {
+  if (loading || worstLoading || bestLoading) {
     return <Loading />;
   } else if (error || post?.post === null) {
     navigate(-1);
@@ -140,16 +140,6 @@ export const Post: React.FC<PostProps> = ({}) => {
               />
             )}
 
-            {/* {latest?.latestReview && (
-              <ReviewCard
-                label="Latest Review"
-                score={latest?.latestReview.score!}
-                comment={latest?.latestReview.comment!}
-                visitedDate={latest?.latestReview.visitedDate!}
-                username={latest?.latestReview.user.username}
-              />
-            )} */}
-
             {worst?.worstReview && (
               <ReviewCard
                 label="Lowest Review"
@@ -164,7 +154,7 @@ export const Post: React.FC<PostProps> = ({}) => {
           <Grid item xs={12} md={6}>
             <Box>
               <Typography variant="body2" fontWeight={600} component="h4">
-                Recent reviews
+                Recent Reviews
               </Typography>
               {reviewsData?.reviews
                 .filter((item, index) => index < 5)

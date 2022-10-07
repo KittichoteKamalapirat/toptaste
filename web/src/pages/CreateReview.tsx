@@ -80,8 +80,9 @@ export const CreateReview: React.FC<CreateReviewProps> = ({}) => {
                   update: (cache) => {
                     cache.evict({ fieldName: "bestReview" });
                     cache.evict({ fieldName: "worstReview" });
-                    cache.evict({ fieldName: "latestReview" });
+                    // cache.evict({ fieldName: "latestReview" });
                     cache.evict({ fieldName: "post" });
+                    cache.evict({ fieldName: "reviews" });
                   },
                 });
 
@@ -118,6 +119,7 @@ export const CreateReview: React.FC<CreateReviewProps> = ({}) => {
                       inputFormat="MM/DD/yyyy"
                       value={date}
                       onChange={handleChange}
+                      disableFuture={true}
                       renderInput={(params: any) => (
                         <TextField
                           {...params}
